@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Immigrant Guide Creator – Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+    h1 { color: #333; }
+    .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    button { padding: 10px 20px; background: #0072ff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0059c1; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Immigrant Guide Creator – Example Tool</h1>
+  <p>This is a demo page showing how a questionnaire can generate a personalised resource guide.</p>
+
+  <div class="card">
+    <h2>Questionnaire</h2>
+    <label>Age: <input type="number" id="age" /></label><br/><br/>
+
+    <label>Your situation:</label><br/>
+    <select id="status">
+      <option value="student">Student</option>
+      <option value="unemployed">Unemployed</option>
+      <option value="employed">Employed</option>
+    </select><br/><br/>
+
+    <label>Interests:</label><br/>
+    <input type="checkbox" value="finnish" class="interest"> Learn Finnish<br/>
+    <input type="checkbox" value="swedish" class="interest"> Learn Swedish<br/>
+    <input type="checkbox" value="hobbies" class="interest"> Find hobbies<br/>
+    <input type="checkbox" value="wellbeing" class="interest"> Physical & mental wellbeing<br/>
+
+    <br/>
+    <button onclick="generateGuide()">Create My Guide</button>
+  </div>
+
+  <div id="guide" class="card hidden">
+    <h2>Your Personalised Guide</h2>
+    <div id="guideContent"></div>
+  </div>
+
+<script>
+  // Example database of pages
+  const pages = {
+    wellbeing: {
+      title: "Wellbeing Resources",
+      content: "Tips for physical & mental wellbeing, healthcare contacts, and support hotlines in Finland."
+    },
+    finnish: {
+      title: "Learn Finnish – Opportunities",
+      content: "Free and paid Finnish courses, integration training, apps, and local study groups."
+    },
+    swedish: {
+      title: "Learn Swedish – Opportunities",
+      content: "Community classes, beginner-friendly materials, and Swedish-speaking cultural clubs."
+    },
+    student: {
+      title: "Student Life in Finland",
+      content: "Student unions, study benefits, housing, discounts, and campus wellbeing services."
+    },
+    unemployed: {
+      title: "Job Seeking & TE Services",
+      content: "Unemployment benefits, CV support, career coaching, and local TE office links."
+    },
+    hobbies: {
+      title: "Hobbies & Activities",
+      content: "Clubs, sports centres, volunteering, and meet‑up groups across Finland."
+    }
+  };
+
+  function generateGuide() {
+    const age = document.getElementById("age").value;
+    const status = document.getElementById("status").value;
+    const interests = Array.from(document.querySelectorAll('.interest:checked')).map(i => i.value);
+
+    let selectedPages = [];
+
+    // Add status‑based page
+    if (status === "student") selectedPages.push(pages.student);
+    if (status === "unemployed") selectedPages.push(pages.unemployed);
+
+    // Add interest‑based pages
+    interests.forEach(i => {
+      if (pages[i]) selectedPages.push(pages[i]);
+    });
+
+    // Display guide
+    const container = document.getElementById("guideContent");
+    container.innerHTML = "";
+
+    selectedPages.forEach(p => {
+      const section = document.createElement("div");
+      section.innerHTML = `<h3>${p.title}</h3><p>${p.content}</p>`;
+      container.appendChild(section);
+    });
+
+    document.getElementById("guide").classList.remove("hidden");
+  }
+</script>
+
+</body>
+</html>
